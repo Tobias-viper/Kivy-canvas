@@ -1,10 +1,9 @@
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty,NumericProperty,ReferenceListProperty
+from kivy.properties import NumericProperty,ReferenceListProperty
 from kivy.vector import Vector
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.graphics import Line
 
 Builder.load_string('''
 #:import Window kivy.core.window.Window
