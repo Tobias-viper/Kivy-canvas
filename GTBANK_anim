@@ -1,0 +1,77 @@
+from kivy.lang import Builder
+from kivy.uix.floatlayout import FloatLayout
+from kivy.properties import ObjectProperty,NumericProperty,ReferenceListProperty
+from kivy.vector import Vector
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.graphics import Line
+
+Builder.load_string('''
+#:import Window kivy.core.window.Window
+<Moveable>:
+	size_hint:[None,None]
+	size:[30,30]
+	canvas.after:
+		Color:
+			rgba:[1,1,1,1]
+		Rectangle:
+			pos:self.pos
+			size:self.size
+<Real>:
+	size_hint:[None,None]
+	size:[125,125]
+	pos:[Window.width/2 -65.5,Window.height/2 -65.5]
+	canvas.before:
+		Color:
+			rgba:[1,.5,.2,.85]
+		Rectangle:
+			pos:self.pos
+			size:self.size
+	
+	Moveable:
+		id:bal
+		center_x:self.parent.center_x-35
+		center_y:self.parent.center_y-25
+''')
+
+class Moveable(FloatLayout):
+	pass
+	
+class Real(FloatLayout):
+	velocity_x=NumericProperty(0)
+	velocity_y=NumericProperty(4)
+	velocity=ReferenceListProperty(velocity_x,velocity_y)
+		
+	def detect(self,dt):
+		self.Obj=self.ids.bal
+		self.Obj.pos = Vector(self.velocity) + self.Obj.pos
+	
+		max_width_x = self.pos[0] + self.size[0]-self.Obj.size[0]-self.Obj.size[0]/2
+		max_height_y = self.pos[1]+self.size[1]-self.Obj.size[1]-self.Obj.size[1]/2
+		
+		if self.Obj.pos[1] >= max_height_y:
+			self.velocity = [4,0]
+			print("ik")
+		
+		elif self.Obj.pos[1] <= self.pos[1]+10:
+			self.Obj.pos = Vector(-4,4) + self.Obj.pos
+		else:
+			pass
+			
+		if self.Obj.pos[0] >= max_width_x:
+			self.velocity=[0,-4]
+		
+		elif self.Obj.pos[0] <=self.pos[0]+12:
+			self.Obj.pos = Vector(0,8) + self.Obj.pos
+		else:
+			pass
+		
+			
+class Milk(App):
+
+	def build(self):
+		tel =Real()
+		Clock.schedule_interval(tel.detect,1/30)
+		return tel
+
+Milk().run()
